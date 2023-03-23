@@ -44,13 +44,14 @@ contract Service{
     constructor(string serviceName, string serviceDescription) public {
         name = serviceName;
         description = serviceDescription;
+        avgRating = "0";
     }
 
     function reverseTaggedStatus() public {
         tagged = !tagged;
     }
 
-    function rate(uint score, string text) public {
+    function rate(uint score, string text, string newAverage) public {
         address sender = msg.sender;
 
         require(!reviewers[sender]);
@@ -61,12 +62,17 @@ contract Service{
         reviewText: text
         });
 
+        setAverageRating(newAverage);
         reviews.push(review);
         reviewers[sender] = true;
     }
 
-    function rateAndChangeTag(uint score, string text) public {
-        rate(score, text);
+    function setAverageRating(string rating) private {
+        avgRating = rating;
+    }
+
+    function rateAndChangeTag(uint score, string text, string newAverage) public {
+        rate(score, text, newAverage);
         reverseTaggedStatus();
     }
 

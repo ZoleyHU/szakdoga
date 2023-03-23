@@ -21,6 +21,7 @@ class ServiceInfo extends Component {
         const description = await currentService.methods.description().call();
         const reviewCount = await currentService.methods.getReviewCount().call();
         const tagged = await currentService.methods.tagged().call();
+        const avgRating = await currentService.methods.avgRating().call();
 
         const reviews = await Promise.all(
             Array(parseInt(reviewCount)).fill().map((element, index) => {
@@ -28,7 +29,7 @@ class ServiceInfo extends Component {
             })
         );
 
-        return {name, description, reviewCount, address: address, reviews, tagged};
+        return {name, description, reviewCount, address: address, reviews, tagged, avgRating};
     }
 
     onSubmit = async event => {
@@ -40,9 +41,9 @@ class ServiceInfo extends Component {
         try {
             const nextAverage = this.averageRating(Number(this.state.starRating), 1);
             if ((this.props.tagged && nextAverage > 3) || (!this.props.tagged && nextAverage < 3)) {
-                await currentService.methods.rateAndChangeTag(Number(this.state.starRating), String(this.state.textRating)).send({from: accounts[0]});
+                await currentService.methods.rateAndChangeTag(Number(this.state.starRating), String(this.state.textRating), String(nextAverage)).send({from: accounts[0]});
             } else {
-                await currentService.methods.rate(Number(this.state.starRating), String(this.state.textRating)).send({from: accounts[0]});
+                await currentService.methods.rate(Number(this.state.starRating), String(this.state.textRating), String(nextAverage)).send({from: accounts[0]});
             }
             Router.replaceRoute(`/services/${this.props.address}`)
         } catch (error) {
@@ -52,14 +53,8 @@ class ServiceInfo extends Component {
     }
 
     averageRating(nextScore=0, additionalAmount = 0) {
-        let ratingSum = nextScore;
+        let ratingSum = Number(this.props.avgRating) + nextScore;
         const reviewCount = Number(this.props.reviewCount) + additionalAmount;
-        this.props.reviews?.map((element, index) => {
-            ratingSum += Number(element.reviewScore);
-        });
-        if (Number(this.props.reviewCount) === 0) {
-            return 0;
-        }
         return ratingSum / reviewCount;
     }
 
@@ -77,7 +72,7 @@ class ServiceInfo extends Component {
             <Layout>
                 <Container text>
                     <Container textAlign='center' as='h3'>{this.props.name}</Container>
-                    <Container textAlign='center' as='i'>{this.averageRating() + '/10'} <Icon name='star'/></Container>
+                    <Container textAlign='center' as='i'>{this.props.avgRating + '/10'} <Icon name='star'/></Container>
                     <Container textAlign='center' as='p'>{this.props.description}</Container>
                     <Container textAlign='center' as='i'><Icon
                         name='comments'/> {this.props.reviewCount} értékelés</Container>
