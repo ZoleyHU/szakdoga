@@ -11,6 +11,20 @@ contract ServiceFactory {
     function getDeployedServices() public view returns (address[]) {
         return deployedServices;
     }
+
+    function getMostRatedService() public view returns (address) {
+        uint maxIndex = 0;
+        uint maxValue = 0;
+        for(uint i=0; i < deployedServices.length; i++){
+            Service currentService = Service(deployedServices[i]);
+            uint currentAmountOfRatings = currentService.getReviewCount();
+            if (currentAmountOfRatings > maxValue) {
+                maxIndex = i;
+                maxValue = currentAmountOfRatings;
+            }
+        }
+        return deployedServices[maxIndex];
+    }
 }
 
 contract Service{
@@ -22,13 +36,14 @@ contract Service{
 
     Review[] public reviews;
     string public name;
-    string public descripion;
+    string public description;
     bool public tagged;
     mapping(address=>bool) public reviewers;
+    string public avgRating;
 
-    constructor(string serviceName, string serviceDescripion) public {
+    constructor(string serviceName, string serviceDescription) public {
         name = serviceName;
-        descripion = serviceDescripion;
+        description = serviceDescription;
     }
 
     function reverseTaggedStatus() public {
