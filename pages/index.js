@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import factory from "../ethereum/factory";
-import {Button, Card, Container, Divider, Icon} from "semantic-ui-react";
+import {Button, Card, CardGroup, Container, Divider, Icon} from "semantic-ui-react";
 import Layout from "../components/Layout";
 import {Link} from "../routes";
 import Service from "../ethereum/service";
@@ -24,8 +24,18 @@ class HomePage extends Component {
                 }
             })
         );
-
-        return {services};
+        const mostRatedServiceAddress = await factory.methods.getMostRatedService().call();
+        const mostRatedService = Service(mostRatedServiceAddress);
+        const mostRatedServiceTagged = await mostRatedService.methods.tagged().call();
+        const mostRatedServiceName = await mostRatedService.methods.name().call();
+        const mostRatedServiceAvgRating = await mostRatedService.methods.avgRating().call();
+        const mostRatedServiceDetails = {
+            serviceAddress: mostRatedServiceAddress,
+            serviceName: mostRatedServiceName,
+            tagged: mostRatedServiceTagged,
+            avgRating: mostRatedServiceAvgRating
+        }
+        return {services, mostRatedServiceDetails};
     }
 
     renderItems() {
@@ -50,7 +60,21 @@ class HomePage extends Component {
     render() {
         return (
             <Layout>
-                <Container textAlign='left' as='h3' >Szolgáltatások</Container>
+                <Container textAlign='left' as='h3'>Legtöbbet értékelt szolgáltatás</Container>
+                <Card.Group itemsPerRow={1}>
+                    <Card
+                        fluid
+                        header={this.props.mostRatedServiceDetails.serviceName}
+                        meta={this.props.mostRatedServiceDetails.avgRating + '/ 10'}
+                        extra={
+                            <Link route={`/services/${this.props.mostRatedServiceDetails.serviceAddress}`}>
+                                <Button basic color={this.props.mostRatedServiceDetails.tagged ? 'red' : 'green'}>Megtekintés</Button>
+                            </Link>
+                        }
+                        color={this.props.mostRatedServiceDetails.tagged ? 'red' : 'green'}
+                    />
+                </Card.Group>
+                <Container textAlign='left' as='h3'>Szolgáltatások</Container>
                 {this.renderItems()}
             </Layout>
         );
