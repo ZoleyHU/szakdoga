@@ -6,12 +6,7 @@ import {Container} from "semantic-ui-react";
 const Layout = (props) => {
     return (
         <Container>
-            <h2>Szolgáltatás értékelő</h2>
-            {/*<link*/}
-            {/*    async*/}
-            {/*    rel="stylesheet"*/}
-            {/*    href="https://cdn.jsdelivr.net/npm/semantic-ui@2/dist/semantic.min.css"*/}
-            {/*/>*/}
+            <Container textAlign='center' as='h2'>Szolgáltatás értékelő</Container>
             <NavigationBar/>
             {props.children}
         </Container>

@@ -47,7 +47,7 @@ class HomePage extends Component {
     render() {
         return (
             <Layout>
-                <Container textAlign='center' as='h2' >Szolgáltatások</Container>
+                <Container textAlign='left' as='h3' >Szolgáltatások</Container>
                 {this.renderItems()}
             </Layout>
         );
