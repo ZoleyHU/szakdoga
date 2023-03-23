@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import factory from "../ethereum/factory";
-import {Button, Card, Divider} from "semantic-ui-react";
+import {Button, Card, Container, Divider} from "semantic-ui-react";
 import Layout from "../components/Layout";
 import {Link} from "../routes";
 import Service from "../ethereum/service";
@@ -47,7 +47,7 @@ class HomePage extends Component {
     render() {
         return (
             <Layout>
-                <h3>Szolgáltatások</h3>
+                <Container textAlign='center' as='h2' >Szolgáltatások</Container>
                 {this.renderItems()}
             </Layout>
         );
