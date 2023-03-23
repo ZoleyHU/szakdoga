@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import factory from "../ethereum/factory";
-import {Button, Card, Container, Divider} from "semantic-ui-react";
+import {Button, Card, Container, Divider, Icon} from "semantic-ui-react";
 import Layout from "../components/Layout";
 import {Link} from "../routes";
 import Service from "../ethereum/service";
@@ -14,11 +14,13 @@ class HomePage extends Component {
                 const currentServie = Service(serviceAddresses[index]);
                 const name = await currentServie.methods.name().call();
                 const tagged = await currentServie.methods.tagged().call();
+                const avgRating = await currentServie.methods.avgRating().call();
 
                 return {
                     serviceAddress: serviceAddresses[index],
                     serviceName: name,
-                    tagged: tagged
+                    tagged: tagged,
+                    avgRating: avgRating
                 }
             })
         );
@@ -31,6 +33,7 @@ class HomePage extends Component {
             const color = service.tagged ? 'red' : 'green';
             return {
                 header: service.serviceName,
+                meta: service.avgRating + '/ 10',
                 extra: (
                     <Link route={`/services/${service.serviceAddress}`}>
                         <Button basic color={color}>Megtekintés</Button>
