@@ -18,7 +18,7 @@ class ServiceInfo extends Component {
         const address = props.query.address;
         const currentService = Service(address);
         const name = await currentService.methods.name().call();
-        const description = await currentService.methods.descripion().call();
+        const description = await currentService.methods.description().call();
         const reviewCount = await currentService.methods.getReviewCount().call();
         const tagged = await currentService.methods.tagged().call();
 
