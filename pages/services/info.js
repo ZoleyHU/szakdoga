@@ -5,6 +5,7 @@ import {Button, Comment, Container, Divider, Form, Icon, Item, Message, Rating, 
 import web3 from "../../ethereum/web3";
 import {Router} from "../../routes";
 import Review from "../../components/Review";
+import {loadGetInitialProps} from "next/dist/shared/lib/utils";
 
 class ServiceInfo extends Component {
     state = {
@@ -39,7 +40,7 @@ class ServiceInfo extends Component {
         this.setState({loading: true, error: ''});
 
         try {
-            const nextAverage = this.averageRating(Number(this.state.starRating), 1);
+            const nextAverage = this.averageRating(Number(this.state.starRating));
             if ((this.props.tagged && nextAverage > 3) || (!this.props.tagged && nextAverage < 3)) {
                 await currentService.methods.rateAndChangeTag(Number(this.state.starRating), String(this.state.textRating), String(nextAverage)).send({from: accounts[0]});
             } else {
@@ -52,9 +53,12 @@ class ServiceInfo extends Component {
         this.setState({loading: false})
     }
 
-    averageRating(nextScore=0, additionalAmount = 0) {
-        let ratingSum = Number(this.props.avgRating) + nextScore;
-        const reviewCount = Number(this.props.reviewCount) + additionalAmount;
+    averageRating(nextScore) {
+        let ratingSum = nextScore;
+        const reviewCount = Number(this.props.reviewCount) + 1;
+        this.props.reviews?.map((element, index) => {
+            ratingSum += Number(element.reviewScore);
+        });
         return ratingSum / reviewCount;
     }
 
