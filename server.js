@@ -14,7 +14,7 @@ const port = process.env.PORT || 3000;
 app.prepare().then(() => {
     express().use(handler).listen(port, (err) => {
         if (err) throw err;
-        console.log('Ready on localhost:'+port);
+        console.log('Ready on port: '+port);
     });
 });
 
