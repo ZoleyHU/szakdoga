@@ -6,6 +6,7 @@ const app = next({
     dev: process.env.NODE_ENV !== 'production'
 });
 
+console.log(app)
 const routes = require('./routes');
 const handler = routes.getRequestHandler(app);
 
