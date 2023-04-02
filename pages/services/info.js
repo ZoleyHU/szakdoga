@@ -5,6 +5,7 @@ import {Button, Comment, Container, Divider, Form, Icon, Item, Message, Rating, 
 import web3 from "../../ethereum/web3";
 import {Router} from "../../routes";
 import Review from "../../components/Review";
+import {loadGetInitialProps} from "next/dist/shared/lib/utils";
 
 class ServiceInfo extends Component {
     state = {
@@ -18,9 +19,10 @@ class ServiceInfo extends Component {
         const address = props.query.address;
         const currentService = Service(address);
         const name = await currentService.methods.name().call();
-        const description = await currentService.methods.descripion().call();
+        const description = await currentService.methods.description().call();
         const reviewCount = await currentService.methods.getReviewCount().call();
         const tagged = await currentService.methods.tagged().call();
+        const avgRating = await currentService.methods.avgRating().call();
 
         const reviews = await Promise.all(
             Array(parseInt(reviewCount)).fill().map((element, index) => {
@@ -28,7 +30,7 @@ class ServiceInfo extends Component {
             })
         );
 
-        return {name, description, reviewCount, address: address, reviews, tagged};
+        return {name, description, reviewCount, address: address, reviews, tagged, avgRating};
     }
 
     onSubmit = async event => {
@@ -38,11 +40,11 @@ class ServiceInfo extends Component {
         this.setState({loading: true, error: ''});
 
         try {
-            const nextAverage = this.averageRating(Number(this.state.starRating), 1);
+            const nextAverage = this.averageRating(Number(this.state.starRating));
             if ((this.props.tagged && nextAverage > 3) || (!this.props.tagged && nextAverage < 3)) {
-                await currentService.methods.rateAndChangeTag(Number(this.state.starRating), String(this.state.textRating)).send({from: accounts[0]});
+                await currentService.methods.rateAndChangeTag(Number(this.state.starRating), String(this.state.textRating), String(nextAverage)).send({from: accounts[0]});
             } else {
-                await currentService.methods.rate(Number(this.state.starRating), String(this.state.textRating)).send({from: accounts[0]});
+                await currentService.methods.rate(Number(this.state.starRating), String(this.state.textRating), String(nextAverage)).send({from: accounts[0]});
             }
             Router.replaceRoute(`/services/${this.props.address}`)
         } catch (error) {
@@ -51,15 +53,12 @@ class ServiceInfo extends Component {
         this.setState({loading: false})
     }
 
-    averageRating(nextScore=0, additionalAmount = 0) {
+    averageRating(nextScore) {
         let ratingSum = nextScore;
-        const reviewCount = Number(this.props.reviewCount) + additionalAmount;
+        const reviewCount = Number(this.props.reviewCount) + 1;
         this.props.reviews?.map((element, index) => {
             ratingSum += Number(element.reviewScore);
         });
-        if (Number(this.props.reviewCount) === 0) {
-            return 0;
-        }
         return ratingSum / reviewCount;
     }
 
@@ -77,7 +76,7 @@ class ServiceInfo extends Component {
             <Layout>
                 <Container text>
                     <Container textAlign='center' as='h3'>{this.props.name}</Container>
-                    <Container textAlign='center' as='i'>{this.averageRating() + '/10'} <Icon name='star'/></Container>
+                    <Container textAlign='center' as='i'>{this.props.avgRating + '/10'} <Icon name='star'/></Container>
                     <Container textAlign='center' as='p'>{this.props.description}</Container>
                     <Container textAlign='center' as='i'><Icon
                         name='comments'/> {this.props.reviewCount} értékelés</Container>
