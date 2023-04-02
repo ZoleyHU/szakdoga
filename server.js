@@ -3,7 +3,7 @@ const next = require('next');
 const express = require('express');
 
 const app = next({
-    dev: process.env.NODE_ENV === 'production'
+    dev: process.env.NODE_ENV !== 'production'
 });
 
 const routes = require('./routes');
