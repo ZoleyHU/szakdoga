@@ -8,7 +8,7 @@ import pLimit from "p-limit";
 
 class HomePage extends Component {
     static async getInitialProps() {
-        const limit = pLimit(2);
+        const limit = pLimit(3);
         const serviceAddresses = await factory.methods.getDeployedServices().call();
         const mostRatedServiceAddress = await factory.methods.getMostRatedService().call();
         let mostRatedService;
