@@ -14,7 +14,7 @@ class HomePage extends Component {
         let mostRatedService;
 
         const services = await Promise.all(
-            Array(parseInt(serviceAddresses.length)).fill().map(async (element, index) => {
+            Array(parseInt(serviceAddresses.length)).fill().map((element, index) => {
                 return limit(async () => {
                     const currentServie = Service(serviceAddresses[index]);
                     const name = await currentServie.methods.name().call();
