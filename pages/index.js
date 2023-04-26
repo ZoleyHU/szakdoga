@@ -9,6 +9,7 @@ import pLimit from "p-limit";
 class HomePage extends Component {
     static async getInitialProps() {
         const limit = pLimit(4);
+        const sleep = t => new Promise(rs => setTimeout(rs, t));
         const serviceAddresses = await factory.methods.getDeployedServices().call();
         const mostRatedServiceAddress = await factory.methods.getMostRatedService().call();
         let mostRatedService;
@@ -16,6 +17,7 @@ class HomePage extends Component {
         const services = await Promise.all(
             Array(parseInt(serviceAddresses.length)).fill().map((element, index) => {
                 return limit(async () => {
+                    await sleep(500);
                     const currentServie = Service(serviceAddresses[index]);
                     const name = await currentServie.methods.name().call();
                     const tagged = await currentServie.methods.tagged().call();
