@@ -17,7 +17,7 @@ class HomePage extends Component {
         const services = await Promise.all(
             Array(parseInt(serviceAddresses.length)).fill().map((element, index) => {
                 return limit(async () => {
-                    await sleep(500);
+                    await sleep(100);
                     const currentServie = Service(serviceAddresses[index]);
                     const name = await currentServie.methods.name().call();
                     const tagged = await currentServie.methods.tagged().call();
