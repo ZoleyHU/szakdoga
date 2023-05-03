@@ -19,9 +19,13 @@ class NewService extends Component {
         this.setState({loading: true, error: '', success: ''});
 
         try {
+            let startTime = new Date().getTime();
             await factory.methods.createService(String(this.state.name),String(this.state.description)).send({
                 from: accounts[0]
             });
+            let endTime = new Date().getTime();
+            let result = endTime-startTime;
+            console.log("transaction time: "+result +" ms");
             this.setState({success: 'Szolgáltatás sikeresen hozzáadva!'});
         } catch (error) {
             this.setState({error: "Hiba történt! Kérjük ellenőrizze az adatokat, majd hagyja jóvá a tranzakciót!"})

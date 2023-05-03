@@ -41,11 +41,15 @@ class ServiceInfo extends Component {
 
         try {
             const nextAverage = this.averageRating(Number(this.state.starRating));
+            let startTime = new Date().getTime();
             if ((this.props.tagged && nextAverage > 3) || (!this.props.tagged && nextAverage < 3)) {
                 await currentService.methods.rateAndChangeTag(Number(this.state.starRating), String(this.state.textRating), String(nextAverage)).send({from: accounts[0]});
             } else {
                 await currentService.methods.rate(Number(this.state.starRating), String(this.state.textRating), String(nextAverage)).send({from: accounts[0]});
             }
+            let endTime = new Date().getTime();
+            let result = endTime-startTime;
+            console.log("transaction time: "+ result +" ms");
             Router.replaceRoute(`/services/${this.props.address}`)
         } catch (error) {
             this.setState({error: "Hiba történt! Kérjük ellenőrizze az adatokat, majd hagyja jóvá a tranzakciót! Figyelem, egy szolgáltatást felhasználónként csak egyszer lehet értékelni!"})
