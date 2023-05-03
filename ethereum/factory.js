@@ -3,10 +3,10 @@ import ServiceFactory from './build/ServiceFactory.json';
 
 const instance = new web3.eth.Contract(
     JSON.parse(ServiceFactory.interface),
-    '0xAA8B052c5B431901219426571c53013Dd7b361a5'
+    '0x65071CA07891EB914aB5A9aCf1Cf21B64ac80Eca'
 );
 
 //goerli: 0x55EbfbDd2FE5fE7B1aCFDB8fb17254F1Bf37ef08
-//sepolia: 0xAA8B052c5B431901219426571c53013Dd7b361a5
+//sepolia: 0x65071CA07891EB914aB5A9aCf1Cf21B64ac80Eca
 
 export default instance;
