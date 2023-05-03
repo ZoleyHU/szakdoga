@@ -71,6 +71,9 @@ class HomePage extends Component {
     }
 
     renderMostRatedItem() {
+        if (typeof this.props.mostRatedService === "undefined") {
+            return <CardGroup/>
+        }
         let item = this.renderSingleItem(this.props.mostRatedService);
         item.description = this.props.mostRatedService.reviewCount + " db értékeléssel a legértékeltebb szolgáltatás jelenleg az oldalon";
         const items = [item]
