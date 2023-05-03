@@ -22,6 +22,7 @@
     "mocha": "^9.1.2",
     "next": "^12.3.4",
     "next-routes": "^1.4.2",
+    "p-limit": "^4.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "semantic-ui-css": "^2.5.0",
