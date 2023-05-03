@@ -47,15 +47,15 @@ class HomePage extends Component {
         return {services, mostRatedService};
     }
 
-    renderItems() {
+    renderServices() {
         const items = this.props.services.map((service, index) => {
-            return this.renderSingleItem(service);
+            return this.renderSingleService(service);
         });
 
         return <Card.Group items={items} itemsPerRow={2}/>
     }
 
-    renderSingleItem(service) {
+    renderSingleService(service) {
         const color = service.tagged ? 'red' : 'green';
         return {
             header: service.serviceName,
@@ -70,11 +70,11 @@ class HomePage extends Component {
         };
     }
 
-    renderMostRatedItem() {
+    renderMostRatedService() {
         if (typeof this.props.mostRatedService === "undefined") {
             return <CardGroup/>
         }
-        let item = this.renderSingleItem(this.props.mostRatedService);
+        let item = this.renderSingleService(this.props.mostRatedService);
         item.description = this.props.mostRatedService.reviewCount + " db értékeléssel a legértékeltebb szolgáltatás jelenleg az oldalon";
         const items = [item]
         return <CardGroup items={items}/>
@@ -84,9 +84,9 @@ class HomePage extends Component {
         return (
             <Layout>
                 <Container textAlign='left' as='h3'>Legtöbbet értékelt szolgáltatás</Container>
-                {this.renderMostRatedItem()}
+                {this.renderMostRatedService()}
                 <Container textAlign='left' as='h3'>Szolgáltatások</Container>
-                {this.renderItems()}
+                {this.renderServices()}
             </Layout>
         );
     }
