@@ -3,6 +3,7 @@ import {Form, Button, TextArea, Input, Message} from "semantic-ui-react";
 import Layout from "../../components/Layout";
 import factory from "../../ethereum/factory";
 import web3 from "../../ethereum/web3";
+import {error} from "next/dist/build/output/log";
 
 class NewService extends Component {
     state = {
@@ -19,15 +20,26 @@ class NewService extends Component {
         this.setState({loading: true, error: '', success: ''});
 
         try {
+            this.checkEmptyInputs();
+            let startTime = new Date().getTime();
             await factory.methods.createService(String(this.state.name),String(this.state.description)).send({
                 from: accounts[0]
             });
+            let endTime = new Date().getTime();
+            let result = endTime-startTime;
+            console.log("transaction time: "+result +" ms");
             this.setState({success: 'Szolgáltatás sikeresen hozzáadva!'});
         } catch (error) {
             this.setState({error: "Hiba történt! Kérjük ellenőrizze az adatokat, majd hagyja jóvá a tranzakciót!"})
         }
         this.setState({loading: false})
     };
+
+    checkEmptyInputs() {
+        if (this.state.name.trim().length ===0 || this.state.description.trim().length ===0) {
+            throw new error("Üres mezők");
+        }
+    }
 
     render() {
         return (

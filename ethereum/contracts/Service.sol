@@ -13,6 +13,9 @@ contract ServiceFactory {
     }
 
     function getMostRatedService() public view returns (address) {
+        if (deployedServices.length == 0) {
+            return;
+        }
         uint maxIndex = 0;
         uint maxValue = 0;
         for(uint i=0; i < deployedServices.length; i++){
@@ -45,6 +48,7 @@ contract Service{
         name = serviceName;
         description = serviceDescription;
         avgRating = "0";
+        tagged = false;
     }
 
     function reverseTaggedStatus() public {
