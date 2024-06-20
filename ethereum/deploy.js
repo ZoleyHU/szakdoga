@@ -3,7 +3,7 @@ const Web3 = require('web3');
 const compiledFactory = require('./build/ServiceFactory.json');
 
 const provider = new HDWalletProvider(
-    'orphan ten switch style first pet can act chase clock cattle affair',
+    'Insert_your_12_keyword_pharse_here',
     'https://sepolia.infura.io/v3/96989c58fb794859835c56dd12ef1994'
 );
 const web3 = new Web3(provider);
